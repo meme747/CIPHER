@@ -11,41 +11,30 @@ document.addEventListener('DOMContentLoaded', () => {
   musicToggleBtn.style.bottom = '20px';
   musicToggleBtn.style.right = '20px';
   musicToggleBtn.style.zIndex = '1000';
-  musicToggleBtn.style.background = 'var(--primary-color)';
-  musicToggleBtn.style.color = 'var(--bg-color)';
-  musicToggleBtn.style.border = 'none';
+  musicToggleBtn.style.padding = '10px';
   musicToggleBtn.style.borderRadius = '50%';
-  musicToggleBtn.style.width = '50px';
-  musicToggleBtn.style.height = '50px';
-  musicToggleBtn.style.fontSize = '20px';
   musicToggleBtn.style.cursor = 'pointer';
-  musicToggleBtn.style.boxShadow = '0 0 10px rgba(0, 255, 255, 0.5)';
 
-  let isMusicPlaying = false;
+  // Attempt to play music when the site loads
+  function playMusic() {
+    backgroundMusic.play().catch(error => {
+      console.log('Autoplay prevented. Waiting for user interaction.');
+    });
+  }
 
+  // Auto-start music when user interacts with the page
+  document.addEventListener('click', playMusic, { once: true });
+
+  // Toggle music on button click
   musicToggleBtn.addEventListener('click', () => {
-    if (!isMusicPlaying) {
+    if (backgroundMusic.paused) {
       backgroundMusic.play();
-      musicToggleBtn.innerHTML = '🔇';
-      isMusicPlaying = true;
+      musicToggleBtn.innerHTML = '🔊';
     } else {
       backgroundMusic.pause();
-      musicToggleBtn.innerHTML = '🎵';
-      isMusicPlaying = false;
+      musicToggleBtn.innerHTML = '🔇';
     }
   });
-
-  // Start playing music when page loads
-  backgroundMusic.play()
-    .then(() => {
-      isMusicPlaying = true;
-      musicToggleBtn.innerHTML = '🔇';
-    })
-    .catch(error => {
-      console.log('Autoplay was prevented:', error);
-      // This can happen due to browser autoplay restrictions
-      musicToggleBtn.innerHTML = '🎵';
-    });
 
   // Animate hero section
   gsap.from('.hero-content', {
@@ -63,6 +52,25 @@ document.addEventListener('DOMContentLoaded', () => {
     ease: 'power3.out'
   });
 
+  // Animate social icons
+  gsap.utils.toArray('.social-logo').forEach(logo => {
+    logo.addEventListener('mouseenter', () => {
+      gsap.to(logo, {
+        scale: 1.2,
+        duration: 0.3,
+        ease: 'power1.inOut'
+      });
+    });
+
+    logo.addEventListener('mouseleave', () => {
+      gsap.to(logo, {
+        scale: 1,
+        duration: 0.3,
+        ease: 'power1.inOut'
+      });
+    });
+  });
+});
   // Animate social icons
   gsap.utils.toArray('.social-logo').forEach(logo => {
     logo.addEventListener('mouseenter', () => {
